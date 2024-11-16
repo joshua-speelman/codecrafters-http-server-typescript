@@ -7,7 +7,7 @@ console.log("Logs from your program will appear here!");
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     const requestString = data.toString();
-    console.log("full request:", requestString)
+    console.log("full request:", requestString);
     // need to get the path from the first line
     const path = requestString.split(" ")[1];
     console.log("This is the shape of path:", path);
@@ -22,7 +22,6 @@ const server = net.createServer((socket) => {
         echoString;
       socket.write(response);
     } else if (path === "/user-agent") {
-      const userAgentString = 
     } else if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
     } else {
