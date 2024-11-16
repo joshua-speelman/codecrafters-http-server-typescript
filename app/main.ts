@@ -22,6 +22,15 @@ const server = net.createServer((socket) => {
         echoString;
       socket.write(response);
     } else if (path === "/user-agent") {
+      const lines = requestString.split("\r\n");
+
+      let userAgent = "";
+      for (const line of lines) {
+        if (line.startsWith("User-Agent: ")) {
+          userAgent = line.slice("User-Agent: ".length);
+          break;
+        }
+      }
     } else if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
     } else {
