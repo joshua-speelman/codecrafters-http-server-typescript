@@ -11,7 +11,9 @@ const server = net.createServer((socket) => {
     const path = requestString.split(" ")[1];
     console.log("This is the shape of path:", path);
 
-    if (path === "/") {
+    if (path.startsWith("/echo")) {
+      console.log("echo request test");
+    } else if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
     } else {
       socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
