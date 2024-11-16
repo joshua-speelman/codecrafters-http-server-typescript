@@ -8,10 +8,10 @@ const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     const requestString = data.toString();
     // need to get the path from the first line
-    const path = requestString.split("\r\n")[0];
+    const path = requestString.split(" ")[0];
     console.log("This is the shape of path:", path);
 
-    if (requestString === "/") {
+    if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
     } else {
       socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
