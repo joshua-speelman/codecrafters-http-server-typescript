@@ -12,6 +12,8 @@ const server = net.createServer((socket) => {
     console.log("This is the shape of path:", path);
 
     if (path.startsWith("/echo")) {
+      const echoString = path.slice(6);
+      console.log("this is echostring", echoString);
       console.log("echo request test");
     } else if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
