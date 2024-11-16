@@ -8,7 +8,7 @@ const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     const requestString = data.toString();
     // need to get the path from the first line
-    const path = requestString.split(" ")[0];
+    const path = requestString.split(" ")[1];
     console.log("This is the shape of path:", path);
 
     if (path === "/") {
