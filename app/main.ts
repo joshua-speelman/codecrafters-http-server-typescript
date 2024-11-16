@@ -5,8 +5,8 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
-  socket.on("data", (data: String) => {
-    const requestString = data;
+  socket.on("data", (data) => {
+    const requestString = data.ToString();
 
     // need to get the path from the first line
     const path = requestString.split("\r\n")[0];
