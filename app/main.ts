@@ -1,7 +1,11 @@
 import * as net from "net";
+import * as fs from "fs";
+import process from "process";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
+
+const directory = process.argv[process.argv.indexOf("--directory") + 1];
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
@@ -41,6 +45,23 @@ const server = net.createServer((socket) => {
       socket.write(response);
     } else if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
+    } else if (path.startsWith("/files")) {
+      const fileName = path.slice(7);
+      const fullPath = directory + "/" + fileName;
+
+      try {
+        const fileContent = fs.readFileSync(fullPath);
+        const fileSize = fileContent.length;
+        const response =
+          "HTTP/1.1 200 OK\r\n" +
+          "Content-Type: application/octet-stream\r\n" +
+          `Content-Length: ${fileSize}\r\n` +
+          "\r\n" +
+          fileContent;
+        socket.write(response);
+      } catch {
+        socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+      }
     } else {
       socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
     }
