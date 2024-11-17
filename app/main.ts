@@ -47,7 +47,7 @@ const server = net.createServer((socket) => {
       socket.write(response);
     } else if (path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
-    } else if (path.startsWith("/files")) {
+    } else if (method === "GET" && path.startsWith("/files")) {
       const fileName = path.slice(7);
       const fullPath = directory + "/" + fileName;
 
@@ -61,6 +61,16 @@ const server = net.createServer((socket) => {
           "\r\n" +
           fileContent;
         socket.write(response);
+      } catch {
+        socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+      }
+    } else if (method === "POST" && path.startsWith("/files")) {
+      const fileName = path.slice(7);
+      const fullPath = directory + "/" + fileName;
+
+      try {
+        const fileContent = fs.writeFileSync(fullPath);
+        socket.write("HTTP/1.1 201 Created\r\n\r\n");
       } catch {
         socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
       }
