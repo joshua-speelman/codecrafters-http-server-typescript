@@ -67,12 +67,13 @@ const server = net.createServer((socket) => {
     } else if (method === "POST" && path.startsWith("/files")) {
       const fileName = path.slice(7);
       const fullPath = directory + "/" + fileName;
+      const bodyContent = requestString.split("\r\n\r\n")[1];
 
       try {
-        const fileContent = fs.writeFileSync(fullPath);
+        fs.writeFileSync(fullPath, bodyContent);
         socket.write("HTTP/1.1 201 Created\r\n\r\n");
       } catch {
-        socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+        socket.write("HTTP/1.1 500 Internal Server Error\r\n\r\n");
       }
     } else {
       socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
