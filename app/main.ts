@@ -14,6 +14,8 @@ const server = net.createServer((socket) => {
     console.log("full request:", requestString);
     // need to get the path from the first line
     const path = requestString.split(" ")[1];
+    const method = requestString.split(" ")[0];
+    console.log(method);
     console.log("This is the shape of path:", path);
 
     if (path.startsWith("/echo")) {
