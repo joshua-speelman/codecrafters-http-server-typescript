@@ -33,8 +33,10 @@ const server = net.createServer((socket) => {
       if (acceptsGzip) {
         contentToSend = zlib.gzipSync(echoString);
         contentLength = contentToSend.length;
-      } else contentToSend = echoString;
-      contentLength = echoString.length;
+      } else {
+        contentToSend = echoString;
+        contentLength = echoString.length;
+      }
 
       const response =
         "HTTP/1.1 200 OK\r\n" +
