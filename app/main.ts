@@ -26,15 +26,23 @@ const server = net.createServer((socket) => {
       const acceptsGzip = lines.some(
         (line) => line.startsWith("Accept-Encoding:") && line.includes("gzip")
       );
-      const compressedEchoString = zlib.gzipSync(echoString);
+
+      let contentToSend;
+      let contentLength;
+
+      if (acceptsGzip) {
+        contentToSend = zlib.gzipSync(echoString);
+        contentLength = contentToSend.length;
+      } else contentToSend = echoString;
+      contentLength = echoString.length;
 
       const response =
         "HTTP/1.1 200 OK\r\n" +
         "Content-Type: text/plain\r\n" +
         (acceptsGzip ? "Content-Encoding: gzip\r\n" : "") +
-        `Content-Length: ${echoString.length}\r\n` +
+        `Content-Length: ${contentLength}\r\n` +
         "\r\n" +
-        compressedEchoString;
+        contentToSend;
       socket.write(response);
     } else if (path === "/user-agent") {
       const lines = requestString.split("\r\n");
