@@ -1,6 +1,7 @@
 import * as net from "net";
 import * as fs from "fs";
 import process from "process";
+import * as zlib from "zlib";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -25,6 +26,7 @@ const server = net.createServer((socket) => {
       const acceptsGzip = lines.some(
         (line) => line.startsWith("Accept-Encoding:") && line.includes("gzip")
       );
+      const compressedEchoString = zlib.gzipSync(echoString);
 
       const response =
         "HTTP/1.1 200 OK\r\n" +
@@ -32,7 +34,7 @@ const server = net.createServer((socket) => {
         (acceptsGzip ? "Content-Encoding: gzip\r\n" : "") +
         `Content-Length: ${echoString.length}\r\n` +
         "\r\n" +
-        echoString;
+        compressedEchoString;
       socket.write(response);
     } else if (path === "/user-agent") {
       const lines = requestString.split("\r\n");
