@@ -20,9 +20,16 @@ const server = net.createServer((socket) => {
 
     if (path.startsWith("/echo")) {
       const echoString = path.slice(6);
+
+      const lines: string[] = requestString.split("\r\n");
+      const acceptsGzip = lines.some(
+        (line) => line.startsWith("Accept-Encoding:") && line.includes("gzip")
+      );
+
       const response =
         "HTTP/1.1 200 OK\r\n" +
         "Content-Type: text/plain\r\n" +
+        (acceptsGzip ? "Content-Encoding: gzip\r\n" : "") +
         `Content-Length: ${echoString.length}\r\n` +
         "\r\n" +
         echoString;
