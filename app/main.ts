@@ -33,19 +33,25 @@ const server = net.createServer((socket) => {
       if (acceptsGzip) {
         contentToSend = zlib.gzipSync(echoString);
         contentLength = contentToSend.length;
-      } else {
-        contentToSend = echoString;
-        contentLength = echoString.length;
-      }
 
-      const response =
-        "HTTP/1.1 200 OK\r\n" +
-        "Content-Type: text/plain\r\n" +
-        (acceptsGzip ? "Content-Encoding: gzip\r\n" : "") +
-        `Content-Length: ${contentLength}\r\n` +
-        "\r\n" +
-        contentToSend;
-      socket.write(response);
+        socket.write(
+          "HTTP/1.1 200 OK\r\n" +
+            "Content-Type: text/plain\r\n" +
+            "Content-Encoding: gzip\r\n" +
+            `Content-Length: ${contentLength}\r\n` +
+            "\r\n"
+        );
+
+        socket.write(contentToSend);
+      } else {
+        const response =
+          "HTTP/1.1 200 OK\r\n" +
+          "Content-Type: text/plain\r\n" +
+          `Content-Length: ${echoString.length}\r\n` +
+          "\r\n" +
+          echoString;
+        socket.write(response);
+      }
     } else if (path === "/user-agent") {
       const lines = requestString.split("\r\n");
 
